@@ -20,6 +20,11 @@ class IdentifyFaceQuery extends Face
     private $numOfResults = 5;
 
     /**
+     * @var string
+     */
+    private $gallery = '';
+
+    /**
      * @return float
      */
     public function getThreshold(): float
@@ -51,7 +56,28 @@ class IdentifyFaceQuery extends Face
         $this->numOfResults = $numOfResults;
     }
 
-    function jsonSerialize()
+    /**
+     * @return string
+     */
+    public function getGallery(): string
+    {
+        return $this->gallery;
+    }
+
+    /**
+     * @param string $gallery
+     */
+    public function setGallery(string $gallery)
+    {
+        $this->gallery = $gallery;
+    }
+
+    public function hasGallery()
+    {
+        return $this->getGallery() ? true : false;
+    }
+
+    public function jsonSerialize()
     {
         return [
             'photo' => $this->getPhoto(),
@@ -60,6 +86,14 @@ class IdentifyFaceQuery extends Face
             'threshold' => $this->getThreshold(),
             'n' => $this->getNumOfResults(),
         ];
+    }
+
+    public function getPath($path = 'identify')
+    {
+        if ($this->hasGallery()) {
+            return 'faces/gallery/' . $this->getGallery();
+        }
+        return $path;
     }
 
 

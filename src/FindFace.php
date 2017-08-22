@@ -7,8 +7,13 @@ namespace SSitdikov\FindFaceAPI;
 
 
 use SSitdikov\FindFaceAPI\Model\CreateFaceQuery;
+use SSitdikov\FindFaceAPI\Model\DetectFaceQuery;
 use SSitdikov\FindFaceAPI\Model\Face;
+use SSitdikov\FindFaceAPI\Model\FacesListByMeta;
+use SSitdikov\FindFaceAPI\Model\FacesListQuery;
 use SSitdikov\FindFaceAPI\Model\IdentifyFaceQuery;
+use SSitdikov\FindFaceAPI\Model\MetasListQuery;
+use SSitdikov\FindFaceAPI\Model\VerifyFaceQuery;
 
 class FindFace
 {
@@ -28,35 +33,83 @@ class FindFace
         $this->token = $token;
     }
 
-    public function createFace(CreateFaceQuery $face)
+    public function createFace(CreateFaceQuery $query)
     {
-        $result = $this->callApi('face', $face);
+        $result = $this->callApi('face', $query);
         return $result;
     }
 
-    public function identify(IdentifyFaceQuery $face)
+    public function identify(IdentifyFaceQuery $query)
     {
-        $result = $this->callApi('identify', $face);
+        $result = $this->callApi($query->getPath(), $query);
         return $result;
     }
 
-    private function callApi($method, \JsonSerializable $body)
+    public function detect(DetectFaceQuery $query)
     {
-        $uri = self::BASE_URI . self::FF_VERSION . '/' . trim($method, '/') . '/';
+        $result = $this->callApi('detect', $query);
+        return $result;
+    }
+
+    public function verify(VerifyFaceQuery $query)
+    {
+        $result = $this->callApi('verify', $query);
+        return $result;
+    }
+
+    public function metasList(MetasListQuery $query)
+    {
+        $result = $this->callApi($query->getPath('meta'), $query, 'GET');
+        return $result;
+
+    }
+
+    public function facesList(FacesListQuery $query)
+    {
+        $result = $this->callApi($query->getPath('faces'), $query, 'GET');
+        return $result;
+    }
+
+    /**
+     * @param FacesListByMeta $query
+     * @return mixed
+     * @TODO Refactor it to one method FacesList
+     */
+    public function facesListByMeta(FacesListByMeta $query)
+    {
+        $result = $this->callApi($query->getPath('faces'), $query, 'GET');
+        return $result;
+    }
+
+    /**
+     * @param $path
+     * @param \JsonSerializable $body
+     * @param string $method
+     * @return mixed
+     * @throws \Exception
+     *
+     * @TODO Maybe aggregate only $body context and get path from it ?
+     */
+    private function callApi($path, \JsonSerializable $body, $method = 'POST')
+    {
+        $uri = self::BASE_URI . self::FF_VERSION . '/' . trim($path, '/') . '/';
 
         $context_options = array(
             'http' => array(
-                'method' => 'POST',
+                'method' => $method,
                 'header' => [
                     'Authorization: Token ' . $this->token,
                     'Content-Type: application/json',
                 ],
-                'content' => json_encode($body),
             )
         );
+        $body = json_encode($body);
+        if (!empty($body)) {
+            $context_options['http']['content'] = $body;
+        }
         $context = stream_context_create($context_options);
         $result = file_get_contents($uri, false, $context);
-        if ($result){
+        if ($result) {
             return json_decode($result);
         } else {
             throw  new \Exception('Empty answer from API');
