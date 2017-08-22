@@ -91,7 +91,7 @@ class IdentifyFaceQuery extends Face
     public function getPath($path = 'identify')
     {
         if ($this->hasGallery()) {
-            return 'faces/gallery/' . $this->getGallery();
+            return 'faces/gallery/' . $this->getGallery() . '/identify';
         }
         return $path;
     }
