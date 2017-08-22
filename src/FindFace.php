@@ -7,6 +7,7 @@ namespace SSitdikov\FindFaceAPI;
 
 
 use SSitdikov\FindFaceAPI\Model\CreateFaceQuery;
+use SSitdikov\FindFaceAPI\Model\CreateGallery;
 use SSitdikov\FindFaceAPI\Model\DetectFaceQuery;
 use SSitdikov\FindFaceAPI\Model\Face;
 use SSitdikov\FindFaceAPI\Model\FacesListByMeta;
@@ -81,6 +82,28 @@ class FindFace
         return $result;
     }
 
+    public function createGallery(CreateGallery $query)
+    {
+        $result = $this->callApi('galleries', $query);
+        return $result;
+    }
+
+    public function galleryList()
+    {
+        $result = $this->callApi('galleries', new CreateGallery(), 'GET');
+        return $result;
+    }
+
+    public function deleteGallery($name)
+    {
+        return $this->callApi('galleries/' . $name, new CreateGallery(), 'DELETE');
+    }
+
+    public function deleteFaceById($id)
+    {
+        return $this->callApi('faces/id/' . $id, new CreateGallery(), 'DELETE');
+    }
+
     /**
      * @param $path
      * @param \JsonSerializable $body
@@ -112,7 +135,11 @@ class FindFace
         if ($result) {
             return json_decode($result);
         } else {
-            throw  new \Exception('Empty answer from API');
+            if ($method !== 'DELETE') {
+                throw  new \Exception('Empty answer from API');
+            } else {
+                return json_encode($result);
+            }
         }
     }
 

@@ -23,6 +23,16 @@ class FacesListQuery implements \JsonSerializable
     private $max_id = 0;
 
     /**
+     * FacesListQuery constructor.
+     * @param string $gallery
+     */
+    public function __construct($gallery = '')
+    {
+        $this->gallery = $gallery;
+    }
+
+
+    /**
      * @return string
      */
     public function getGallery(): string
