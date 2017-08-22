@@ -1,0 +1,17 @@
+{
+    "name": "ssitdikov/find-face-api",
+    "description": "API Client for FindFace service",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Salavat Sitdikov",
+            "email": "sitsalavat@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SSitdikov\\FindFaceAPI\\": "src"
+        }
+    },
+    "require": {}
+}
