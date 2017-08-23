@@ -81,7 +81,7 @@ class FacesListRequest implements IRequest
         $this->max_id = $max_id;
     }
 
-    public function getPath($path)
+    public function getPath(): string
     {
         $gallery = '';
         $meta = '';
@@ -96,18 +96,17 @@ class FacesListRequest implements IRequest
         $query = '?' . ($this->getMinId() ? 'min_id=' . $this->getMinId() . '&' : '')
             . ($this->getMaxId() ? 'max_id=' . $this->getMaxId() : '');
 
-        return trim($path . '/' . ($gallery ?: '') . ($meta ?: '') . ($query ?: '') , '/?&');
+        return trim('faces/' . ($gallery ?: '') . ($meta ?: '') . ($query ?: '') , '/?&');
     }
 
-    public function getMethod()
+    public function getMethod(): string
     {
         return self::GET;
     }
 
-
-    public function jsonSerialize()
+    public function getOptions(): array
     {
-        // TODO: Implement jsonSerialize() method.
+        return [];
     }
 
 

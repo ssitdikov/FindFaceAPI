@@ -4,7 +4,7 @@
 namespace SSitdikov\FindFaceAPI\Request;
 
 
-interface IRequest extends \JsonSerializable
+interface IRequest
 {
 
     const POST = 'POST';
@@ -12,6 +12,7 @@ interface IRequest extends \JsonSerializable
     const DELETE = 'DELETE';
     const PUT = 'PUT';
 
-    public function getPath($path);
-    public function getMethod();
+    public function getPath(): string;
+    public function getMethod(): string;
+    public function getOptions(): array;
 }
